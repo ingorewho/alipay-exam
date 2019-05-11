@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 指定dao -->
+<mapper namespace="com.alipay.transfer.api.dao.TransferRecordDAO">
+    <resultMap id="BaseResultMap" type="com.alipay.transfer.api.entity.TransferRecord" >
+        <id column="id" property="recordId" jdbcType="INTEGER" />
+        <result column="record_id" property="recordId" jdbcType="INTEGER" />
+        <result column="pay_account" property="payAccount" jdbcType="VARCHAR" />
+        <result column="recive_account" property="reciveAccount" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <sql id="baseColums">
+        record_id,
+        pay_account,
+        recive_account,
+        status,
+        amount
+    </sql>
+
+    <!--  useGeneratedKeys自动生成主键 keyProperty主键id   -->
+    <insert id="save" parameterType="com.alipay.transfer.api.entity.TransferRecord">
+        insert into transfer_record(record_id,pay_account,recive_account,status,amount)
+          values (
+                #{recordId},
+                #{payAccount},
+                #{reciveAccount},
+                #{status},
+                #{amount}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.alipay.transfer.api.entity.TransferRecord">
+        UPDATE transfer_record
+          SET
+            status=#{status}
+          WHERE
+            record_id=#{recordId}
+    </update>
+
+    <select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="baseColums" />
+            from transfer_record
+        WHERE
+            status=#{status}
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 指定dao -->
+<mapper namespace="com.alipay.transfer.api.dao.AccountDAO">
+    <resultMap id="BaseResultMap" type="com.alipay.transfer.api.entity.Account" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <sql id="baseColums">
+        name,
+        amount
+    </sql>
+
+    <!--  useGeneratedKeys自动生成主键 keyProperty主键id   -->
+    <insert id="save" parameterType="com.alipay.transfer.api.entity.Account">
+        insert into account(name,amount)
+          values (
+                #{name},
+                #{amount}
+                )
+    </insert>
+
+    <update id="decreaseAmount" parameterType="com.alipay.transfer.api.entity.Account">
+        UPDATE account
+          SET
+            amount=amount-#{amount} and version=version+1
+          WHERE
+            name=#{name} and version=#{version}
+    </update>
+
+    <update id="increaseAmount" parameterType="com.alipay.transfer.api.entity.Account">
+        UPDATE account
+          SET
+            amount=amount+#{amount}
+          WHERE
+            name=#{name}
+    </update>
+
+    <select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="baseColums" />
+          from account
+        WHERE
+          name=#{name}
+    </select>
+</mapper>
